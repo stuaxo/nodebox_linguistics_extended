@@ -39,10 +39,10 @@ class Variable:
         self.name = name
 
     def __eq__(self, other):
-	return self.equals(other)
+        return self.equals(other)
 
     def __ne__(self, other):
-	return not self.equals(other)
+        return not self.equals(other)
 
     def equals(self, other):
         """A comparison function."""
@@ -68,10 +68,10 @@ class Constant:
         self.name = name
 
     def __eq__(self, other):
-	return self.equals(other)
+        return self.equals(other)
 
     def __ne__(self, other):
-	return not self.equals(other)
+        return not self.equals(other)
 
     def equals(self, other):
         """A comparison function."""
@@ -91,10 +91,10 @@ class Expression:
             raise NotImplementedError
 
     def __eq__(self, other):
-	return self.equals(other)
+        return self.equals(other)
 
     def __ne__(self, other):
-	return not self.equals(other)
+        return not self.equals(other)
 
     def equals(self, other):
         """Are the two expressions equal, modulo alpha conversion?"""
@@ -128,7 +128,7 @@ class Expression:
         simply dropped and all variables they introduce are renamed so that
         they are unique.
         """
-	return self._skolemise(set(), Counter())
+        return self._skolemise(set(), Counter())
 
     def _skolemise(self, bound_vars, counter):
         raise NotImplementedError
@@ -185,7 +185,7 @@ class VariableExpression(Expression):
         return self.__str__()
 
     def _skolemise(self, bound_vars, counter):
-	return self
+        return self
 
     def __str__(self): return '%s' % self.variable
 
@@ -258,7 +258,7 @@ class ConstantExpression(Expression):
         return self.__str__()
 
     def _skolemise(self, bound_vars, counter):
-	return self
+        return self
 
     def __str__(self): return '%s' % self.constant
 
@@ -379,36 +379,36 @@ class VariableBinderExpression(Expression):
             return '%s%s.%s' % (prefix, self.variable, self.term)
 
     def __hash__(self):
-	return hash(repr(self))
+        return hash(repr(self))
 
 class LambdaExpression(VariableBinderExpression):
     """A lambda expression: \\x.M."""
     PREFIX = '\\'
 
     def _skolemise(self, bound_vars, counter):
-	bv = bound_vars.copy()
-	bv.add(self.variable)
-	return self.__class__(self.variable, self.term._skolemise(bv, counter))
+        bv = bound_vars.copy()
+        bv.add(self.variable)
+        return self.__class__(self.variable, self.term._skolemise(bv, counter))
 
     def __repr__(self):
-	return "LambdaExpression('%s', '%s')" % (self.variable, self.term)
+        return "LambdaExpression('%s', '%s')" % (self.variable, self.term)
 
 class SomeExpression(VariableBinderExpression):
     """An existential quantification expression: some x.M."""
     PREFIX = 'some '
 
     def _skolemise(self, bound_vars, counter):
-	if self.variable in bound_vars:
-	    var = Variable("_s" + str(counter.get()))
-	    term = self.term.replace(self.variable, VariableExpression(var))
-	else:
-	    var = self.variable
-	    term = self.term
-	bound_vars.add(var)
-	return term._skolemise(bound_vars, counter)
+        if self.variable in bound_vars:
+            var = Variable("_s" + str(counter.get()))
+            term = self.term.replace(self.variable, VariableExpression(var))
+        else:
+            var = self.variable
+            term = self.term
+        bound_vars.add(var)
+        return term._skolemise(bound_vars, counter)
 
     def __repr__(self):
-	return "SomeExpression('%s', '%s')" % (self.variable, self.term)
+        return "SomeExpression('%s', '%s')" % (self.variable, self.term)
 
 
 class AllExpression(VariableBinderExpression):
@@ -416,12 +416,12 @@ class AllExpression(VariableBinderExpression):
     PREFIX = 'all '
 
     def _skolemise(self, bound_vars, counter):
-	bv = bound_vars.copy()
-	bv.add(self.variable)
-	return self.__class__(self.variable, self.term._skolemise(bv, counter))
+        bv = bound_vars.copy()
+        bv.add(self.variable)
+        return self.__class__(self.variable, self.term._skolemise(bv, counter))
 
     def __repr__(self):
-	return "AllExpression('%s', '%s')" % (self.variable, self.term)
+        return "AllExpression('%s', '%s')" % (self.variable, self.term)
 
 
 
@@ -496,9 +496,9 @@ class ApplicationExpression(Expression):
         first = self.first.simplify()
         second = self.second.simplify()
         if isinstance(first, LambdaExpression):
-	    variable = first.variable
-	    term = first.term
-	    return term.replace(variable, second).simplify()
+            variable = first.variable
+            term = first.term
+            return term.replace(variable, second).simplify()
         else:
             return self.__class__(first, second)
 
@@ -506,14 +506,14 @@ class ApplicationExpression(Expression):
         first = self.first.infixify()
         second = self.second.infixify()
         if isinstance(first, Operator) and not str(first) == 'not':
-	    return self.__class__(second, first)
+            return self.__class__(second, first)
         else:
             return self.__class__(first, second)    
 
     def _skolemise(self, bound_vars, counter):
-	first = self.first._skolemise(bound_vars, counter)
-	second = self.second._skolemise(bound_vars, counter)
-	return self.__class__(first, second)
+        first = self.first._skolemise(bound_vars, counter)
+        second = self.second._skolemise(bound_vars, counter)
+        return self.__class__(first, second)
 
     def __str__(self):
         # Print ((M N) P) as (M N P).
@@ -585,7 +585,7 @@ class Parser:
         whether the token will be removed from the buffer; setting it to
         0 gives lookahead capability."""
         if self.buffer == '':
-            raise Error, "end of stream"
+            raise Error("end of stream")
         tok = None
         buffer = self.buffer
         while not tok:
@@ -605,7 +605,7 @@ class Parser:
     def isVariable(self, token):
         """Is this token a variable (that is, not one of the other types)?"""
         TOKENS = [Parser.LAMBDA, Parser.SOME, Parser.ALL,
-	       Parser.DOT, Parser.OPEN, Parser.CLOSE, Parser.EQ]
+           Parser.DOT, Parser.OPEN, Parser.CLOSE, Parser.EQ]
         TOKENS.extend(self.constants)
         TOKENS.extend(Parser.BOOL)
         return token not in TOKENS 
@@ -614,33 +614,33 @@ class Parser:
         """Parse the next complete expression from the stream and return it."""
         tok = self.token()
         
-	if tok in [Parser.LAMBDA, Parser.SOME, Parser.ALL]:
-            # Expression is a lambda expression: \x.M
-	    # or a some expression: some x.M
-	    if tok == Parser.LAMBDA:
-		factory = LambdaExpression
-	    elif tok == Parser.SOME:
-		factory = SomeExpression
+        if tok in [Parser.LAMBDA, Parser.SOME, Parser.ALL]:
+                # Expression is a lambda expression: \x.M
+            # or a some expression: some x.M
+            if tok == Parser.LAMBDA:
+                factory = LambdaExpression
+            elif tok == Parser.SOME:
+                factory = SomeExpression
             elif tok == Parser.ALL:
-		factory = AllExpression
-	    else:
-		raise ValueError(tok)
+                factory = AllExpression
+            else:
+                raise ValueError(tok)
 
             vars = [self.token()]
             while self.isVariable(self.token(0)):
                 # Support expressions like: \x y.M == \x.\y.M
-		# and: some x y.M == some x.some y.M
+                # and: some x y.M == some x.some y.M
                 vars.append(self.token())
-            tok = self.token()
+                tok = self.token()
 
-            if tok != Parser.DOT:
-                raise Error, "parse error, unexpected token: %s" % tok
-            term = self.next()
-            accum = factory(Variable(vars.pop()), term)
-            while vars:
-                accum = factory(Variable(vars.pop()), accum)
-            return accum
-	    
+                if tok != Parser.DOT:
+                    raise Error("parse error, unexpected token: %s" % tok)
+                term = self.next()
+                accum = factory(Variable(vars.pop()), term)
+                while vars:
+                    accum = factory(Variable(vars.pop()), accum)
+                return accum
+        
         elif tok == Parser.OPEN:
             # Expression is an application expression: (M N)
             first = self.next()
@@ -677,7 +677,7 @@ class Parser:
                 # Expression is a simple variable expression: x
                 return VariableExpression(Variable(tok))
             else:
-                raise Error, "parse error, unexpected token: %s" % tok
+                raise Error("parse error, unexpected token: %s" % tok)
     
     # This is intended to be overridden, so that you can derive a Parser class
     # that constructs expressions using your subclasses.  So far we only need
@@ -722,20 +722,20 @@ def main():
     P = VariableExpression(p)
     Q = VariableExpression(q)
     for l in expressions():
-        print "Expression:", l
-        print "Variables:", l.variables()
-        print "Free:", l.free()
-        print "Subterms:", l.subterms()
-        print "Simplify:",l.simplify()
+        print("Expression:", l)
+        print("Variables:", l.variables())
+        print("Free:", l.free())
+        print("Subterms:", l.subterms())
+        print("Simplify:",l.simplify())
         la = ApplicationExpression(ApplicationExpression(l, P), Q)
         las = la.simplify()
-        print "Apply and simplify: %s -> %s" % (la, las)
+        print("Apply and simplify: %s -> %s" % (la, las))
         ll = Parser(str(l)).next()
-        print 'l is:', l
-        print 'll is:', ll
+        print('l is:', l)
+        print('ll is:', ll)
         assert l.equals(ll)
-        print "Serialize and reparse: %s -> %s" % (l, ll)
-        print
+        print("Serialize and reparse: %s -> %s" % (l, ll))
+        print()
 
 def runtests():
     # Test a beta-reduction which used to be wrong

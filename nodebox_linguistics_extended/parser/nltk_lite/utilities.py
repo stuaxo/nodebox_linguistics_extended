@@ -40,9 +40,9 @@ def print_string(s, width=70):
         try:
             i = s[:width].rindex(' ')
         except ValueError:
-            print s
+            print(s)
             return
-        print s[:i]
+        print(s[:i])
         s = s[i:]
 
 class SortedDict(dict):
@@ -207,7 +207,7 @@ def re_show(regexp, string):
     @rtype: C{string}
     @return: A string with braces surrounding the matched substrings.
     """
-    print re.compile(regexp, re.M).sub("{\g<0>}", string.rstrip())
+    print(re.compile(regexp, re.M).sub("{\g<0>}", string.rstrip()))
 
 
 ##########################################################################
@@ -221,7 +221,7 @@ def filestring(f):
     elif isinstance(f, basestring):
         return open(f).read()
     else:
-        raise ValueError, "Must be called with a filename or file-like object"
+        raise ValueError("Must be called with a filename or file-like object")
 
 ##########################################################################
 # COUNTER, FOR UNIQUE NAMING
@@ -232,9 +232,9 @@ class Counter:
     A counter that auto-increments each time its value is read.
     """
     def __init__(self, initial_value=0):
-	self._value = initial_value
+        self._value = initial_value
     def get(self):
-	self._value += 1
-	return self._value
+        self._value += 1
+        return self._value
 
 

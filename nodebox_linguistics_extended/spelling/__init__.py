@@ -51,7 +51,7 @@ def train(features):
     return model
 
 path = os.path.join(os.path.dirname(__file__), "spelling.txt")
-NWORDS = train(words(open(path).read()))
+NWORDS = train(words(open(path, 'rb').read().decode('utf-8', errors='ignore')))
 
 alphabet = 'abcdefghijklmnopqrstuvwxyz'
 

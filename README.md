@@ -1,4 +1,4 @@
-# Nodebox Linguistics Extended [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
+# Nodebox Linguistics Extended (Python 3 Version) [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 ## Overview 
 This repository is a modified fork of Tom De Smedt's [Nodebox English Linguistics library](https://www.nodebox.net/code/index.php/Linguistics), which bundles WordNet, NLTK, and other useful modules.
 

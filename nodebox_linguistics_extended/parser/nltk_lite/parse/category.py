@@ -436,7 +436,7 @@ class Category(FeatureStructure, cfg.Nonterminal):
         # other semantic value enclosed by '< >'; return value given by the lambda expr parser
         match = _PARSE_RE['semantics'].match(s, position)
         if match is not None:
-            return ParserSubstitute(match.group(1)).next(), match.end()	
+            return ParserSubstitute(match.group(1)).next(), match.end() 
         
         # String value
         if s[position] in "'\"":
@@ -495,11 +495,11 @@ class Category(FeatureStructure, cfg.Nonterminal):
         position = 0
         try:
             lhs, position = cls._parse(s, position)
-        except ValueError, e:
+        except ValueError as e:
             estr = ('Error parsing field structure\n\n\t' +
                     s + '\n\t' + ' '*e.args[1] + '^ ' +
                     'Expected %s\n' % e.args[0])
-            raise ValueError, estr
+            raise ValueError(estr)
         lhs.freeze()
 
         match = _PARSE_RE['arrow'].match(s, position)
@@ -511,11 +511,11 @@ class Category(FeatureStructure, cfg.Nonterminal):
             while position < len(s) and _PARSE_RE['disjunct'].match(s, position) is None:
                 try:
                     val, position = cls._parseval(s, position, {})
-                except ValueError, e:
+                except ValueError as e:
                     estr = ('Error parsing field structure\n\n\t' +
                         s + '\n\t' + ' '*e.args[1] + '^ ' +
                         'Expected %s\n' % e.args[0])
-                    raise ValueError, estr
+                    raise ValueError(estr)
                 if isinstance(val, Category): val.freeze()
                 rhs.append(val)
                 position = _PARSE_RE['whitespace'].match(s, position).end()
@@ -567,8 +567,8 @@ class GrammarCategory(Category):
             if isinstance(fval, bool):
                 if fval: segments.append('+%s' % fname)
                 else: segments.append('-%s' % fname)
- 	    elif isinstance(fval, logic.Expression):
- 		segments.append('%s=%r' % (fname, fval.__str__()))
+            elif isinstance(fval, logic.Expression):
+                segments.append('%s=%r' % (fname, fval.__str__()))
             elif not isinstance(fval, Category):
                 segments.append('%s=%r' % (fname, fval))
             else:
@@ -591,7 +591,7 @@ class GrammarCategory(Category):
     _PARSE_RE = {'semantics': re.compile(r'<([^>]+)>'), 
                  'application': re.compile(r'<(app)\((\?[a-z][a-z]*)\s*,\s*(\?[a-z][a-z]*)\)>'),
                  'slash': re.compile(r'\s*/\s*')}
-    for (k, v) in Category._PARSE_RE.iteritems():
+    for (k, v) in Category._PARSE_RE.items():
         assert k not in _PARSE_RE
         _PARSE_RE[k] = v
     # These we actually do want to override.
@@ -705,14 +705,14 @@ class ApplicationExpressionSubst(logic.ApplicationExpression, SubstituteBindings
         return newval
 
 def demo():
-    print "Category(pos='n', agr=Category(number='pl', gender='f')):"
-    print
-    print Category(pos='n', agr=Category(number='pl', gender='f'))
-    print
-    print "GrammarCategory.parse('VP[+fin]/NP[+pl]'):"
-    print
-    print GrammarCategory.parse('VP[+fin]/NP[+pl]')
-    print
+    print("Category(pos='n', agr=Category(number='pl', gender='f')):")
+    print()
+    print(Category(pos='n', agr=Category(number='pl', gender='f')))
+    print()
+    print("GrammarCategory.parse('VP[+fin]/NP[+pl]'):")
+    print()
+    print(GrammarCategory.parse('VP[+fin]/NP[+pl]'))
+    print()
     
 if __name__ == '__main__':
     demo()
