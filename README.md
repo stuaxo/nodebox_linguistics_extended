@@ -27,6 +27,6 @@ import nodebox_linguistics_extended as nle
 
 You can then call the original Nodebox commands.  For example:
 ```
-print nle.verb.infinitive("swimming")
+print(nle.verb.infinitive("swimming"))
 ```
 ...will print the word "swim".
